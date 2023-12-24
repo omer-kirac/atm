@@ -1,3 +1,4 @@
+from datetime import datetime
 class Bank:
   def __init__(self, name, bank_code):
     self.__name = name
@@ -17,7 +18,7 @@ class Bank:
     self.__bank_code = new_bank_code
 
   def add_atm(self, atm):
-    None  # ATM ekleme metodu
+    None
 
 
 class ATM:
@@ -25,7 +26,14 @@ class ATM:
     self.__atm_id = id
     self.__location = location
 
-    # Diğer özellikler...
+    self.__cash_dispenser = CashDispenser()
+    self.__keypad = Keypad()
+    self.__screen = Screen()
+    self.__printer = Printer()
+    self.__check_deposit = CheckDeposit()
+    self.__cash_deposit = CashDeposit
+
+
 
   # Getter ve Setter metotları
   def get_atm_id(self):
@@ -61,7 +69,11 @@ class CashDispenser:
 
 class Keypad:
   def get_input(self):
-    None
+    try:
+        return int(input())
+    except ValueError:
+      print("Invalid input. Please enter a valid number.")
+      return None
 
 
 class Screen:
@@ -69,17 +81,25 @@ class Screen:
     print(message)
 
   def get_input(self):
-    try:
-      return int(input("Welcome! Please enter your account number: "))
-    except ValueError:
-      print("Invalid input. Please enter a valid account number.")
-      return None
+    None
+
 
 
 class Printer:
-  def print_receipt(self):
-    return print("RECEIPT")
 
+
+  def print_receipt(self,transfer_amount):
+    simdi = datetime.now()
+
+    print("*" * 27)
+    print("*      YTU BANK      *")
+    print("*" * 27)
+    print(f"Date: {simdi.strftime('%Y-%m-%d'):>16}")
+    print(f"Time: {simdi.strftime('%H:%M:%S'):>17}")
+    print("*" * 27)
+    print("*     Operation Successful!    *")
+    print("* {}$ sent successfully *".format(transfer_amount))
+    print("*" * 27)
 
 class CheckDeposit:
     def __init__(self):

@@ -3,10 +3,13 @@ from customer import Account
 from customer import add_customer
 from customer import check_account_number
 from customer import check_card_pin
+from customer import CheckingAccount
 from atm import Screen
 from atm import Printer
-from customer import customer_list
-from customer import Customer
+from atm import Keypad
+from transaction import Withdraw
+from transaction import Deposit
+from transaction import Transfer
 
 
 """card_example = Card("1234567890123456", "Ahmet Yılmaz", "12/25", 1234)
@@ -26,17 +29,33 @@ add_customer("Fatma", "Bursa", "fatma@email.com", "5325551122", "Gold", "5555444
 
 
 login = False
-sifre_sayac = 3
+sifre_sayac = 2
 """user_account.set_available_balance(1234)"""
 Account(123123).set_available_balance(1234)
-screen_instance = Screen()
+screen = Screen()
 printer = Printer()
+keypad = Keypad()
+withdraw = Withdraw(0)
+deposit = Deposit(0)
+transfer = Transfer(0)
+card = Card(0,0,0,0)
 
+id = None
 while True:
     if login == False:
-        id = screen_instance.get_input()
-        user_account = Account(id)
-        password = int(input("Welcome! Please enter your password"))
+        if id == None:
+            screen.show_message("Welcome! Please enter your account number: ")
+            id = keypad.get_input()
+        if check_account_number(id):
+            user_account = Account(id)
+            screen.show_message("Please enter your password:")
+            password = keypad.get_input()
+            if check_card_pin(password,id) == False:
+                if sifre_sayac != 0:
+                    screen.show_message("You have {}$ attemps left for your card code".format(sifre_sayac))
+        else:
+            screen.show_message("Account does not exist ")
+            continue
 
     if check_card_pin(password,id):
         login = True
@@ -58,27 +77,26 @@ while True:
             5.Cancel
             """))
             if(select_withdraw == 1):
-                withdraw_value = 20
+                withdraw.set_amount(20)
             elif(select_withdraw == 2):
-                withdraw_value = 40
+                withdraw.set_amount(40)
             elif(select_withdraw == 3):
-                withdraw_value = 100
+                withdraw.set_amount(100)
             elif(select_withdraw == 4):
-                withdraw_value = int(input("How many dollars would you like to withdraw"))
+                withdraw.set_amount(int(input("How many dollars would you like to withdraw")))
             elif choose == 5:
                 break
             else:
-                screen_instance.show_message("Please select between 1-5")
+                screen.show_message("Please select between 1-5")
 
-            if user_account.get_available_balance() < withdraw_value:
+            if user_account.get_available_balance() < withdraw.get_amount():
                 print("Insufficient funds are not available")
                 continue
-            new_available_balance = int(user_account.get_available_balance()) - withdraw_value
+            new_available_balance = int(user_account.get_available_balance()) - withdraw.get_amount()
             user_account.set_available_balance(new_available_balance)
         elif choose == 2:
-            deposit_value = int(input("How many dollars would you like to deposit"))
-            new_available_balance = int(user_account.get_available_balance()) + deposit_value
-            user_account.set_available_balance(new_available_balance)
+            deposit.set_amount(int(input("How many dollars would you like to deposit")))
+            user_account.set_available_balance(int(user_account.get_available_balance()) + deposit.get_amount())
         elif choose == 3:
             print("Your balance {}$".format(user_account.get_available_balance()))
         elif choose == 4:
@@ -86,14 +104,14 @@ while True:
             if user_account.get_available_balance() < transfer_amount:
                 print("Insufficient funds are not available")
                 continue
-            receiver_id = int(input("Enter number of receiver's account"))
-            if check_account_number(receiver_id):
+            transfer.set_destination_account(int(input("Enter number of receiver's account")))
+            if check_account_number(transfer.get_destination_account()):
                 new_available_balance = int(user_account.get_available_balance()) - transfer_amount
                 user_account.set_available_balance(new_available_balance)
                 print("{}$ sent successfully".format(transfer_amount))
                 receipt = input("Print receipt(Yes/No)").lower()
                 if receipt == 'yes':
-                    printer.print_receipt()
+                    printer.print_receipt(transfer_amount)
             else:
                 user_input = input("This account was not found. Would you like to try again?(Yes/No)").lower()
                 if user_input == 'yes':
@@ -112,6 +130,6 @@ while True:
             print("Please select between 1-5")
     else:
         sifre_sayac -=1
-        if sifre_sayac <= 0:
+        if sifre_sayac < 0:
             print("Your card blocked")
             break

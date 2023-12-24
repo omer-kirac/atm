@@ -109,8 +109,25 @@ class Account:
     def set_available_balance(self, new_available_balance):
         self.__available_balance = new_available_balance
 
+class CheckingAccount(Account):
+    def __init__(self, debit_card_number):
+        self.__debit_card_number = debit_card_number
+
+    def check_account_number(account_number_to_check):
+        for customer in customer_list:
+            if customer._Customer__account._Account__account_number == account_number_to_check:
+                return True  # Eğer hesap numarası eşleşiyorsa True döndür
+        return False  # Eğer eşleşen hesap numarası yoksa False döndür
+
+
+class SavingAccount(Account):
+    def __init__(self, withdraw_limit):
+        self.__withdraw_limit = withdraw_limit
+
 
 customer_list = []
+
+
 
 def add_customer(name, address, email, phone, status, card_number, card_customer_name, card_expiry, card_pin, account_number):
     new_customer = Customer(name, address, email, phone, status, card_number, card_customer_name, card_expiry, card_pin, account_number)
