@@ -40,6 +40,9 @@ class Customer:
     def set_status(self, new_status):
         self.__status = new_status
 
+    def get_account(self):
+        return self.__account
+
     def make_transaction(self, transaction):
         None
 
@@ -139,11 +142,15 @@ def check_account_number(account_number_to_check):
             return True  # Eğer hesap numarası eşleşiyorsa True döndür
     return False  # Eğer eşleşen hesap numarası yoksa False döndür
 
-# customer_list içindeki her bir müşteri örneği için card_pin'i kontrol etme
+# customer_list içindeki her bir müşteri  için card_pin'i kontrol etme
 def check_card_pin(pin_to_check, account_number):
     for customer in customer_list:
         if customer._Customer__card._Card__pin == pin_to_check and customer._Customer__account._Account__account_number == account_number:
             return True  # Eğer pin ve account_number eşleşiyorsa True döndür
     return False  # Eğer eşleşen pin veya account_number yoksa False döndür
-
+def find_customer_by_account_number(account_number):
+    for customer in customer_list:
+        if customer.get_account().get_account_number() == account_number:
+            return customer
+    return None
 

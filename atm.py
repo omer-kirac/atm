@@ -49,10 +49,10 @@ class ATM:
     self.__location = new_location
 
   def authenticate_user(self):
-    None  # Kullanıcı doğrulama metodu
+    None
 
   def make_transaction(self, customer, transaction):
-    None  # İşlem yapma metodu
+    None
 
 
 class CashDispenser:
@@ -92,12 +92,12 @@ class Printer:
     simdi = datetime.now()
 
     print("*" * 27)
-    print("*      YTU BANK      *")
+    print("*        YTU BANK        *")
     print("*" * 27)
     print(f"Date: {simdi.strftime('%Y-%m-%d'):>16}")
-    print(f"Time: {simdi.strftime('%H:%M:%S'):>17}")
+    print(f"Time: {simdi.strftime('%H:%M:%S'):>16}")
     print("*" * 27)
-    print("*     Operation Successful!    *")
+    print("*  Operation Successful!  *")
     print("* {}$ sent successfully *".format(transfer_amount))
     print("*" * 27)
 
